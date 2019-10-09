@@ -1,3 +1,7 @@
+# stylizer-web
+
+> https://stylizer.appspot.com
+
 The Web Service for Stylizer
 
-https://stylizer.appspot.com
+Google App Engine Go Standard Environment

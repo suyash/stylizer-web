@@ -37,28 +37,15 @@ main {
     display: none !important;
 }
 
-.mdc-drawer-app-content {
-    flex: auto;
-    overflow: auto;
-    position: relative;
-}
-
-.main-content {
-    overflow: auto;
-    height: 100%;
-}
-
-.app-bar {
-    position: absolute;
-}
-
 .mdc-top-app-bar {
-    z-index: 7;
-
     .mdc-icon-button.inactive {
         opacity: 0.5;
         pointer-events: none;
     }
+}
+
+.mdc-drawer-app-content {
+    height: calc(100% - 64px);
 }
 
 #appContainer {
@@ -103,15 +90,7 @@ main {
     height: 100%;
 }
 
-.mdc-drawer-app-content.mdc-top-app-bar--fixed-adjust {
-    height: calc(100% - 64px);
-
-    @media (max-width: 599px) {
-        height: calc(100% - 56px);
-    }
-}
-
-.mdc-top-app-bar__action-item[aria-label="Offline"] {
+.mdc-icon-button[aria-label="Offline"] {
     pointer-events: none;
 }
 

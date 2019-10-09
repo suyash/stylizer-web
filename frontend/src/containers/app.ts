@@ -69,11 +69,12 @@ export default class App extends Base {
     public connectedCallback() {
         super.connectedCallback();
 
-        this.topAppBar = new MDCTopAppBar(this.querySelector(".mdc-top-app-bar") as HTMLElement);
-        this.drawer = new MDCDrawer(this.querySelector(".mdc-drawer") as HTMLElement);
+        this.topAppBar = MDCTopAppBar.attachTo(this.querySelector(".mdc-top-app-bar") as HTMLElement);
+        this.drawer = MDCDrawer.attachTo(this.querySelector(".mdc-drawer") as HTMLElement);
         this.drawerList = (this.drawer as MDCDrawer).list as MDCList;
         this.errorSnackbar = new MDCSnackbar(this.querySelector(".error-snackbar") as HTMLElement);
 
+        this.topAppBar.setScrollTarget(this.querySelector("main") as HTMLElement);
         this.topAppBar.listen("MDCTopAppBar:nav", this.onNav);
         this.drawerList.listen("MDCList:action", this.onDrawerListClick);
 
@@ -106,38 +107,41 @@ export default class App extends Base {
 <div id="background">
     <div id="backgroundImage" style=${styleMap(background ? { backgroundImage: `url(${background})` } : {})}></div>
     <div id="foreground" style=${styleMap(background ? { backgroundImage: `url(${background})` } : {})}>
-        <header class="mdc-top-app-bar" style=${styleMap({
-            backgroundColor: state.currentSection === 0 ? ( background ? "#21212166" : "transparent" ) : "#212121",
-            color: state.currentSection === 0 ? ( background ? "white" : "#212121" ) : "white",
-        })}>
-            <div class="mdc-top-app-bar__row">
-                <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-                    <a href="javascript:void(0)" class="mdc-icon-button material-icons mdc-top-app-bar__navigation-icon--unbounded" title="menu" style=${styleMap({
-                        color: state.currentSection === 0 ? ( background ? "white" : "#212121" ) : "white",
-                    })}>menu</a>
-                    <span class="mdc-top-app-bar__title" style=${styleMap({ visibility: background ? "hidden" : "visible" })}>${this.sections[state.currentSection].title}</span>
-                </section>
-                <section style=${styleMap({ visibility: background ? "visible" : "hidden" })} class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true })} style=${styleMap({ display: state.networkStatus ? "none" : "flex" })} aria-label="Offline">signal_wifi_off</a>
-                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true, "inactive": !state.stylizer.is_styled })} aria-label="Undo" @click=${this.onUndo}>undo</a>
-                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true, "inactive": !state.stylizer.is_styled })} aria-label="Download" @click=${this.onDownload}>file_download</a>
-                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true })} aria-label="Close" @click=${this.onClose}>close</a>
-                </section>
-            </div>
-        </header>
         <aside class="mdc-drawer mdc-drawer--modal mdc-top-app-bar--fixed-adjust">
             <div class="mdc-drawer__content">
-                <div class="mdc-list">
-                    ${this.sections.map((section, index) => (html`<a href="javascript:void(0)" class="mdc-list-item ${state.currentSection === index ? "mdc-list-item--activated" : "" }" aria-current="page">
-                        <i class="material-icons mdc-list-item__graphic" aria-hidden="true">${section.icon}</i>
-                        <span class="mdc-list-item__text">${section.title}</span>
-                    </a>`))}
-                </div>
+                <nav class="mdc-list">
+                ${this.sections.map((section, index) => (html`<a href="javascript:void(0)" class="mdc-list-item ${state.currentSection === index ? "mdc-list-item--activated" : "" }" aria-current="page">
+                    <i class="material-icons mdc-list-item__graphic" aria-hidden="true">${section.icon}</i>
+                    <span class="mdc-list-item__text">${section.title}</span>
+                </a>`))}
+                </nav>
             </div>
         </aside>
         <div class="mdc-drawer-scrim"></div>
-        <div class="mdc-drawer-app-content mdc-top-app-bar--fixed-adjust">
-            <main>${cache(state.currentSection === 2 ? this.about : (state.currentSection === 1 ? this.settings : this.stylizer))}</main>
+        <div class="mdc-drawer-app-content">
+            <header class="mdc-top-app-bar app-bar" id="app-bar" style=${styleMap({
+                backgroundColor: state.currentSection === 0 ? ( background ? "#21212166" : "transparent" ) : "#212121",
+                color: state.currentSection === 0 ? ( background ? "white" : "#212121" ) : "white",
+            })}>
+                <div class="mdc-top-app-bar__row">
+                    <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
+                        <a href="javascript:void(0)" class="mdc-icon-button material-icons mdc-top-app-bar__navigation-icon" style=${styleMap({
+                            color: state.currentSection === 0 ? ( background ? "white" : "#212121" ) : "white",
+                        })}>menu</a>
+                        <span class="mdc-top-app-bar__title" style=${styleMap({ visibility: background ? "hidden" : "visible" })}>${this.sections[state.currentSection].title}</span>
+                    </section>
+                    <section style=${styleMap({ visibility: background ? "visible" : "hidden" })} class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end">
+                        <a href="javascript:void(0)" class="mdc-icon-button material-icons" style=${styleMap({ display: state.networkStatus ? "none" : "flex" })} aria-label="Offline">signal_wifi_off</a>
+                        <a href="javascript:void(0)" class=${classMap({"mdc-icon-button": true, "material-icons": true, "inactive": !state.stylizer.is_styled})} aria-label="Undo" @click=${this.onUndo}>undo</a>
+                        <a href="javascript:void(0)" class=${classMap({"mdc-icon-button": true, "material-icons": true, "inactive": !state.stylizer.is_styled})} aria-label="Download" @click=${this.onDownload}>file_download</a>
+                        <a href="javascript:void(0)" class=${classMap({"mdc-icon-button": true, "material-icons": true})} aria-label="Close" @click=${this.onClose}>close</a>
+                    </section>
+                </div>
+            </header>
+
+            <main class="mdc-top-app-bar--fixed-adjust">
+                ${cache(state.currentSection === 2 ? this.about : (state.currentSection === 1 ? this.settings : this.stylizer))}
+            </main>
         </div>
     </div>
 </div>

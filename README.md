@@ -1,3 +1,3 @@
-The go app engine web service for stylizer
+The Web Service for Stylizer
 
 https://stylizer.appspot.com

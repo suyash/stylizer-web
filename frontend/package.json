@@ -5,7 +5,7 @@
   "license": "BSD 3-Clause",
   "private": true,
   "scripts": {
-    "build:assets": "cp -r src/assets dist/assets",
+    "build:assets": "cp -r src/assets dist/assets && cp -r models dist/models",
     "build:css": "node-sass src/sass/main.scss --output dist --include-path node_modules",
     "build:js": "rollup -c",
     "build:production": "rm -rf dist && npm run build:production:css && npm run build:production:js && npm run build:assets",

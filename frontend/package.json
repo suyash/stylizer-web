@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "main": "index.js",
   "license": "BSD 3-Clause",
   "private": true,
@@ -27,7 +27,7 @@
     "@material/switch": "^3.2.0",
     "@material/top-app-bar": "^3.2.0",
     "@material/typography": "^3.1.0",
-    "@tensorflow/tfjs": "^1.2.11",
+    "@tensorflow/tfjs": "1.1.2",
     "idb-keyval": "^3.2.0",
     "lit-html": "^1.1.2",
     "normalize.css": "^8.0.1",

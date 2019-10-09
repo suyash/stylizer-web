@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    /* Basic Options */
+    "target": "es2017",
+    "module": "commonjs",
+    "lib": [
+      "dom",
+      "es7"
+    ],
+    "removeComments": true,
+    /* Strict Type-Checking Options */
+    "strict": true,
+    /* Additional Checks */
+    "noUnusedLocals": false, /* to allow initializations of different material effects */
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    /* Module Resolution Options */
+    // "esModuleInterop": true,
+    /* Source Maps */
+    "sourceMap": false
+  },
+  "exclude": [
+    "node_modules"
+  ]
+}

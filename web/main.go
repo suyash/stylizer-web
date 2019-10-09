@@ -25,6 +25,14 @@ func init() {
 
 func main() {
 	http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/sw.js", swHandler)
+	http.HandleFunc("/robots.txt", robotstxtHandler)
+	http.HandleFunc("/multi_image_stylization", func(res http.ResponseWriter, req *http.Request) {
+		predictionHandler(res, req, "stylizer", "image_stylization", "v1")
+	})
+	http.HandleFunc("/image_comixification", func(res http.ResponseWriter, req *http.Request) {
+		predictionHandler(res, req, "stylizer", "comixgan", "v1")
+	})
 
 	port := os.Getenv("PORT")
 	if port == "" {
@@ -46,7 +54,7 @@ func indexHandler(res http.ResponseWriter, req *http.Request) {
 }
 
 func swHandler(res http.ResponseWriter, req *http.Request) {
-	http.ServeFile(res, req, "static/sw.js")
+	http.ServeFile(res, req, "frontend/dist/sw.js")
 }
 
 var robotstxtText = `User-agent: *
@@ -122,12 +130,12 @@ func predict(ctx context.Context, data []byte, projectid, modelName, modelVersio
 
 	body, err := call.Do()
 	if err != nil {
-		return nil, errors.Wrap(err, "predictor.Predict")
+		return nil, errors.Wrap(err, "Cannot make API call")
 	}
 
 	res := &PredictResponse{}
 	if err := json.Unmarshal([]byte(body.Data), &res); err != nil {
-		return nil, errors.Wrap(err, "predictor.Predict")
+		return nil, errors.Wrap(err, "Cannot unmarshal API response")
 	}
 
 	if len(res.Predictions) == 0 {

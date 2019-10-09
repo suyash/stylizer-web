@@ -1,0 +1,1 @@
+[Redux](https://redux.js.org/) + [Lit-HTML](https://lit-html.polymer-project.org/guide/template-reference) + [Material Components](https://material-components.github.io/material-components-web-catalog/)

@@ -6,4 +6,4 @@ keys
 runs
 *.log
 static
-sw.js
+frontend/dist

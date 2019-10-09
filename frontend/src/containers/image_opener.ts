@@ -18,21 +18,14 @@ export default class ImageOpener extends Base {
         this.context = this.canvas.getContext("2d") as CanvasRenderingContext2D;
     }
 
-    public connectedCallback() {
-        super.connectedCallback();
-
-        this.input = this.querySelector("input") as HTMLInputElement;
-        this.input.addEventListener("change", this.load);
-    }
-
     protected template = () => html`
 <label class="mdc-button mdc-button--raised">
-    <input type="file" accept="image/*" style="display: none;">
+    <input type="file" accept="image/*" style="display: none;" @change=${this.load}>
     <span class="mdc-button__label">Open a File</span>
 </label>`
 
-    private load = async () => {
-        const inp = this.input as HTMLInputElement;
+    private load = async (e: Event) => {
+        const inp = e.target as HTMLInputElement;
         if (inp.files && inp.files[0]) {
             const url = URL.createObjectURL(inp.files[0]);
 

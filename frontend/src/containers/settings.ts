@@ -40,6 +40,14 @@ export default class Settings extends Base {
         this.initialize();
     }
 
+    public disconnectedCallback() {
+        (this.multiStylizationOnDevicePredictionSwitch as MDCSwitch).unlisten(
+            "change", this.onSetMultiStylizationOnDevicePrediction);
+        (this.multiStylizationSaveOfflineSwitch as MDCSwitch).unlisten("change", this.onSetMultiStylizationSaveOffline);
+
+        super.disconnectedCallback();
+    }
+
     // tslint:disable:max-line-length
     protected template = () => html`
 <div class="setting slider-setting">

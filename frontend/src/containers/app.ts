@@ -77,25 +77,24 @@ export default class App extends Base {
         this.topAppBar.listen("MDCTopAppBar:nav", this.onNav);
         this.drawerList.listen("MDCList:action", this.onDrawerListClick);
 
-        (this.querySelector(".mdc-top-app-bar__action-item[aria-label=\"Undo\"]") as HTMLElement).addEventListener(
-            "click", this.onUndo);
-
-        (this.querySelector(".mdc-top-app-bar__action-item[aria-label=\"Download\"]") as HTMLElement).addEventListener(
-            "click", this.onDownload);
-
-        (this.querySelector(".mdc-top-app-bar__action-item[aria-label=\"Close\"]") as HTMLElement).addEventListener(
-            "click", this.onClose);
-
-        this.errorSnackbar.listen("MDCSnackbar:closed", () => {
-            this.store.dispatch({
-                message: null,
-                type: ActionTypes.SHOW_ERROR,
-            });
-        });
+        this.errorSnackbar.listen("MDCSnackbar:closed", this.onSnackbarClose);
 
         window.addEventListener("popstate", this.onPopState);
         window.addEventListener("offline", this.onOffline);
         window.addEventListener("online", this.onOnline);
+    }
+
+    public disconnectedCallback() {
+        (this.topAppBar as MDCTopAppBar).unlisten("MDCTopAppBar:nav", this.onNav);
+        (this.drawerList as MDCList).unlisten("MDCList:action", this.onDrawerListClick);
+
+        (this.errorSnackbar as MDCSnackbar).unlisten("MDCSnackbar:closed", this.onSnackbarClose);
+
+        window.removeEventListener("popstate", this.onPopState);
+        window.removeEventListener("offline", this.onOffline);
+        window.removeEventListener("online", this.onOnline);
+
+        super.disconnectedCallback();
     }
 
     protected template = () => {
@@ -113,16 +112,16 @@ export default class App extends Base {
         })}>
             <div class="mdc-top-app-bar__row">
                 <section class="mdc-top-app-bar__section mdc-top-app-bar__section--align-start">
-                    <a href="javascript:void(0)" class="material-icons mdc-top-app-bar__navigation-icon" title="menu" style=${styleMap({
+                    <a href="javascript:void(0)" class="mdc-icon-button material-icons mdc-top-app-bar__navigation-icon--unbounded" title="menu" style=${styleMap({
                         color: state.currentSection === 0 ? ( background ? "white" : "#212121" ) : "white",
                     })}>menu</a>
                     <span class="mdc-top-app-bar__title" style=${styleMap({ visibility: background ? "hidden" : "visible" })}>${this.sections[state.currentSection].title}</span>
                 </section>
                 <section style=${styleMap({ visibility: background ? "visible" : "hidden" })} class="mdc-top-app-bar__section mdc-top-app-bar__section--align-end" role="toolbar">
-                    <a href="javascript:void(0)" class=${classMap({ "material-icons": true, "mdc-top-app-bar__action-item": true })} style=${styleMap({ display: state.networkStatus ? "none" : "flex" })} aria-label="Offline">signal_wifi_off</a>
-                    <a href="javascript:void(0)" class=${classMap({ "material-icons": true, "mdc-top-app-bar__action-item": true, "inactive": !state.stylizer.is_styled })} aria-label="Undo">undo</a>
-                    <a href="javascript:void(0)" class=${classMap({ "material-icons": true, "mdc-top-app-bar__action-item": true, "inactive": !state.stylizer.is_styled })} aria-label="Download">file_download</a>
-                    <a href="javascript:void(0)" class=${classMap({ "material-icons": true, "mdc-top-app-bar__action-item": true })} aria-label="Close">close</a>
+                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true })} style=${styleMap({ display: state.networkStatus ? "none" : "flex" })} aria-label="Offline">signal_wifi_off</a>
+                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true, "inactive": !state.stylizer.is_styled })} aria-label="Undo" @click=${this.onUndo}>undo</a>
+                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true, "inactive": !state.stylizer.is_styled })} aria-label="Download" @click=${this.onDownload}>file_download</a>
+                    <a href="javascript:void(0)" class=${classMap({ "mdc-icon-button": true, "material-icons": true, "mdc-top-app-bar__action-item--unbounded": true })} aria-label="Close" @click=${this.onClose}>close</a>
                 </section>
             </div>
         </header>
@@ -225,6 +224,13 @@ export default class App extends Base {
 
     private onOnline = () => {
         this.store.dispatch({ type: ActionTypes.SET_NETWORK_STATUS, status: true });
+    }
+
+    private onSnackbarClose = () => {
+        this.store.dispatch({
+            message: null,
+            type: ActionTypes.SHOW_ERROR,
+        });
     }
 }
 

@@ -34,7 +34,7 @@
     "redux": "^4.0.4"
   },
   "devDependencies": {
-    "node-sass": "^4.12.0",
+    "node-sass": "^4.13.1",
     "rollup": "^1.23.1",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-minify-html-literals": "^1.2.2",
